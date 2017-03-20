@@ -24,9 +24,7 @@ if (is_null($Schedule) || $Schedule == ""){
         $Tone = $Bell->Tone;
         if($Time == $timeNow) {
             //Call System command with specified parameters
-            $exec="./ffmpeg -re -i ./tones/$Tone -filter_complex 'aresample=16000,asetnsamples=n=160' -acodec g722 -ac 1 -vn -f rtp udp://$Address &"; 
+            $exec="/var/www/html/ffmpeg -re -i /var/www/html/tones/$Tone -filter_complex 'aresample=16000,asetnsamples=n=160' -acodec g722 -ac 1 -vn -f rtp udp://$Address &"; 
             exec($exec);
         }
     }
-}
-?>

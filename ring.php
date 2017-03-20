@@ -12,8 +12,8 @@
 */
 $dateNow = date("Y-m-d");
 $timeNow = date("H:i");
-$Address = file_get_contents("config/ADDRESS");
-$Schedule = json_decode(file_get_contents('ScheduleCache.json'));
+$Address = file_get_contents("/var/www/html/config/ADDRESS");
+$Schedule = json_decode(file_get_contents("/var/www/html/ScheduleCache.json"));
 //Fail gracefully if no cache
 if (is_null($Schedule) || $Schedule == ""){
     error_log("No Schedule Loaded when checked on $dateNow at $timeNow");

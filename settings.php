@@ -44,7 +44,7 @@ function getScheduleCache(){
 function getLastSync(){
     $ScheduleCache = 'ScheduleCache.json';
     if (file_exists($ScheduleCache)) {
-        echo "Last Sync: " . date ("Y/M/D H:i", filemtime($ScheduleCache));
+        echo "Last Sync: " . date ("Y-m-d H:i", filemtime($ScheduleCache));
     } else {
         echo "Last Sync: ERROR";
     }

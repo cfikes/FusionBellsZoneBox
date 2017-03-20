@@ -9,28 +9,23 @@
 # Directory of ZoneBox
 zoneDIR="/var/www/html/"
 # Get Zone Master
-zoneMaster=`cat ${zoneDIR}MASTER`
+zoneMaster=`cat ${zoneDIR}config/MASTER`
 # My Zone Domain
-zoneDOMAIN=`cat ${zoneDIR}DOMAIN`
+syncUser=`cat ${zoneDIR}config/SYNCUSER`
 #Sync Key
-syncKey=`cat ${zoneDIR}KEY`
+syncKey=`cat ${zoneDIR}config/KEY`
 #Sync Pass
-syncPass=`cat ${zoneDIR}PASS`
+syncPass=`cat ${zoneDIR}config/SYNCPASS`
 # Assign Source of Tones
-toneSource="${zoneMaster}:/var/www/fusionpbx/app/fusionbells/tones/"
+toneSource="/var/www/fusionpbx/app/fusionbells/tones/"
 # Assign Dest of Tones
 toneDest="${zoneDIR}tones/"
 # Sync Tones
-sshpass -p '${syncPass}' rsync -az -e ssh ${syncUser}@${toneSource} $toneDest --delete
+rsync -azv -vvv -e "sshpass -p ${syncPass} ssh -l ${syncUser}" ${zoneMaster}:${toneSource} $toneDest --delete
 # Cache Schedule
-curl -k -d call=offlineschedule,key=${syncKey} https://${zoneMaster}app/fusionbells/api.php > ${zoneDIR}Temp.json
-#Check File Empty before use
-if [ -s ${zoneDIR}Temp.json ]
-then
-     #Not Empty
-	 rm -f ${zoneDIR}ScheduleCache.json
-	 mv ${zoneDIR}Temp.json ${zoneDIR}ScheduleCache.json
-else
-     #Empty
-	 rm -f ${zoneDIR}Temp.json
+curl -k -d "call=offlineschedule&key=${syncKey}" -X POST https://${zoneMaster}/app/fusionbells/api.php > ${zoneDIR}Temp.json
+#Check File before use
+if grep -q Schedule ${zoneDIR}Temp.json; then
+ rm -f ${zoneDIR}ScheduleCache.json
+ mv ${zoneDIR}Temp.json ${zoneDIR}ScheduleCache.json
 fi
